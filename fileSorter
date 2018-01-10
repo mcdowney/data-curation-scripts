@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'optparse'
+
+
+options = {}
+parser = OptionParser.new do |opts|
+
+  opts.banner = 'Usage: folderSorter.rb [options]'
+
+  opts.on('-s', '--source SOURCE', 'Path to files to be converted') do |v|
+    options[:source] = v
+  end
+
+  opts.on('-t', '--target TARGET', 'Path to the folder where SIP is to be created') do |v|
+    options[:target] = v
+  end
+end
+
+
+parser.parse!
+
+
+source = options[:source]
+target = options[:target]
+
+Dir.foreach(source).each do |file|
+  next if File.directory?(File.join(source, file))
+  next if ['.', '..', 'Thumbs.db', '.DS_Store', '.idea', 'folderSorter.rb', 'folderSorterTest.rb',].include?(file)
+
+  # Get the name of the zip file.
+  fileName = File.basename(file, File.extname(file))
+
+  # Get folder name to the month. This regex will need to be updated for other collections
+  base = fileName.match(/\w+\s+\w+-(\d\d\d\d-\d\d)/).to_s
+
+  # If there isn't a directory with that name
+  if !Dir.exist?(File.join(target, base))
+
+    # Make the directory
+    Dir.mkdir(File.join(target, base))
+
+    # Move the file to the matching directory
+    FileUtils.cp(File.join(source, file), File.join(target, base))
+
+  # If there is a directory with that name
+  else
+
+    # Move the file to the matching directory
+    FileUtils.cp(File.join(source, file), File.join(target, base))
+  end
+end
+
