@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'optparse'
+
+
+options = {}
+parser = OptionParser.new do |opts|
+
+	opts.banner = 'Usage: file2folder.rb [options]'
+
+	opts.on('-s', '--source SOURCE', 'Path to files to be converted') do |v|
+		options[:source] = v
+	end
+
+	opts.on('-t', '--target TARGET', 'Path to the folder where SIP is to be created') do |v|
+		options[:target] = v
+	end
+end
+
+parser.parse!
+
+source = options[:source]
+target = options[:target]
+
+# Iterate through a directory; for each file, 
+Dir.foreach(source).each do |file|
+  next if File.directory?(File.join(source, file))
+  next if ['.', '..', 'Thumbs.db', '.DS_Store'].include?(file)
+
+  # Get the name of the file, minus the file extension
+  folder = File.basename(file, File.extname(file))
+
+  # If there isn't a directory with that filename
+  if !Dir.exists?(File.join(target, folder))
+
+    # Make a directory using the filename
+    Dir.mkdir(File.join(target, folder))
+
+    # Move the file into that matching directory
+    FileUtils.cp(File.join(source, file), File.join(target, folder))
+
+    # Otherwise, move the file into its corresponding folder
+  else
+    FileUtils.cp(File.join(source, file), File.join(target, folder))
+  end
+end
