@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'optparse'
+require 'csv'
+
+
+options = {}
+parser = OptionParser.new do |opts|
+
+  opts.banner = 'Usage: filebatcher.rb [options]'
+
+  opts.on('-s', '--source SOURCE', 'Path to files to be batched') do |v|
+    options[:source] = v
+  end
+
+  opts.on('-t', '--target TARGET', 'Path to the folder where SIP is to be created') do |v|
+    options[:target] = v
+  end
+
+  opts.on('-m', '--manifest MANIFEST', 'Path to the csv with the list of desired files') do |v|
+    options[:target] = v
+  end
+end
+
+parser.parse!
+
+source = options[:source]
+target = options[:target]
+manifest = options[:manifest]
+
+=begin
+manifest = 'filelist.csv'
+source = './masters'
+target = './radioHaitiBatch04'
+=end
+
+# Iterate through a source csv, for every row, print out the value
+files = CSV.read(manifest).flatten
+
+# Iterate through a directory; for each file,
+Dir.foreach(source).each do |file|
+  next if File.directory?(File.join(source, file))
+  next if ['.', '..', 'Thumbs.db', '.DS_Store'].include?(file)
+
+  # Get the name of the file, up to the title, year and month
+  filename = File.basename(file, File.extname(file))
+
+  # If the file name is in the list of files
+  if files.include?(filename)
+
+    # Move the file into that target directory
+    FileUtils.cp(File.join(source, file), File.join(target))
+  end
+end
