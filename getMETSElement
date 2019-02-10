@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+import os
+import csv
+import xml.etree.ElementTree as ET
+
+path = 'gamble'
+
+def get_ids():
+    tree = ET.parse(fullname)
+    root = tree.getroot()
+    ids = []
+    for dmdSec in root.findall('dmdSec'):
+        record_id = dmdSec.get('ID')
+    for fileSec in root.findall('fileSec'):
+        for child in fileSec:
+            image_id = fileSec[0].get('ID')
+            try:
+                label_id = fileSec[1].get('ID')
+            except IndexError:
+                label_id = 'null'
+        ids = [record_id, image_id, label_id]
+    return ids
+
+
+id_list = []
+for filename in os.listdir(path):
+    if not filename.endswith('.xml'): continue
+    fullname = os.path.join(path, filename)
+    id_set = get_ids()
+    id_list.append(id_set)
+
+with open('gamble_captions.csv', 'w') as captions:
+    writer = csv.writer(captions)
+    writer.writerow(['dmd_record_id','image_id', 'caption_id'])
+    writer.writerows(id_list)
