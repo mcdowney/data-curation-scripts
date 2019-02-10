@@ -12,3 +12,6 @@ Can be used to create smaller batches from large groups of files (i.e., as with 
 
 ## mets2csv (Python)
 Used to extract element values from the descriptive metadata section of a directory of METS XML manifests and write them to a csv file. Iterates through the directory and reads out element values for each XML file. XML elements are hardcoded into this script and not dynamically read, so some tweaking will need to be done to use on another collection.
+
+## getMetsAttrib (Python)
+Pulls METS attribute value from Gamble collection METS XML files. Iterates through the directory and pulls out ID attributes from the fileSec div of the METS files, writes attributes to csv. All specifics are hardcoded and will require tweaking to apply to other collections.
