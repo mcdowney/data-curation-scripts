@@ -11,4 +11,4 @@ Don't remember what this is used for
 Can be used to create smaller batches from large groups of files (i.e., as with DUL Radio Haiti project). Takes a csv with a list of desired files and copies those files to a new directory.
 
 ## mets2csv (Python)
-Used to extract element values from the descriptive metadata section of a directory of METS XML manifests and writes them to a csv file. Iterates through the directory and reads out element values for each XML file. XML elements are hardcoded into this script and not dynamically read, so some tweaking will need to be done to use on another collection.
+Used to extract element values from the descriptive metadata section of a directory of METS XML manifests and write them to a csv file. Iterates through the directory and reads out element values for each XML file. XML elements are hardcoded into this script and not dynamically read, so some tweaking will need to be done to use on another collection.
