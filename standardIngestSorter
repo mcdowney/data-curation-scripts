@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'optparse'
+require 'csv'
+
+
+
+options = {}
+parser = OptionParser.new do |opts|
+
+  opts.banner = 'Usage: filebatcher.rb [options]'
+
+  opts.on('-s', '--source SOURCE', 'Path to files to be sorted') do |v|
+    options[:source] = v
+  end
+
+  opts.on('-t', '--target TARGET', 'Path to the folder where SIP is to be created') do |v|
+    options[:target] = v
+  end
+
+  opts.on('-m', '--manifest MANIFEST', 'Path to the csv with the desired metadata') do |v|
+    options[:manifest] = v
+  end
+end
+
+parser.parse!
+
+source = options[:source].to_s
+target = options[:target].to_s
+manifest = options[:manifest].to_s
+
+metadata = CSV.read(manifest, headers: true)
+metadata.each do |row|
+  item = row['aspace_id'].to_s
+  if !Dir.exists?(File.join(source, item))
+    Dir.mkdir(File.join(target, item))
+    files = row['identifier']
+    unless files.class == NilClass
+      files.split(',').each do |i|
+        Dir.foreach(source).each do |file|
+          if File.basename(file, File.extname(file)) == i.lstrip
+            FileUtils.cp(File.join(source, file), File.join(target, item))
+          end
+        end
+      end
+    end
+  end
+end
