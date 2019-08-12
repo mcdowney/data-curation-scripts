@@ -15,3 +15,6 @@ Used to extract element values from the descriptive metadata section of a direct
 
 ## getMetsAttrib (Python)
 Pulls METS attribute value from Gamble collection METS XML files. Iterates through the directory and pulls out ID attributes from the fileSec div of the METS files, writes attributes to csv. All specifics are hardcoded and will require tweaking to apply to other collections.
+
+## standardIngestSorter (Ruby)
+Accepts as input a metadata csv with ASpace identifiers and file names, and sorts files into separate directories as appropriate for Standard Ingest. Although the script accepts relative paths to the files, behavior is pinned to column headers "aspace_id" and "identifier".
