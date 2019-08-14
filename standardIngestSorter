@@ -32,15 +32,14 @@ manifest = options[:manifest].to_s
 metadata = CSV.read(manifest, headers: true)
 metadata.each do |row|
   item = row['aspace_id'].to_s
-  if !Dir.exists?(File.join(source, item))
-    Dir.mkdir(File.join(target, item))
-    files = row['identifier']
-    unless files.class == NilClass
-      files.split(',').each do |i|
-        Dir.foreach(source).each do |file|
-          if File.basename(file, File.extname(file)) == i.lstrip
-            FileUtils.cp(File.join(source, file), File.join(target, item))
-          end
+  next if Dir.exists?(File.join(target, item))
+  Dir.mkdir(File.join(target, item))
+  files = row['identifier']
+  unless files.class == NilClass
+    files.split(',').each do |i|
+      Dir.foreach(source).each do |file|
+        if File.basename(file, File.extname(file)) == i.lstrip
+          FileUtils.cp(File.join(source, file), File.join(target, item))
         end
       end
     end
